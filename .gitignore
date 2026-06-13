@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment Variables (NEVER commit)
+.env
+
+# Storage (large files, user data)
+storage/raw/
+storage/images/
+storage/graphs/
+storage/qdrant/
+storage/eval_results/
+storage/metadata.db
+
+# Test files (temporary files used for testing parsers)
+*.pdf
+*.docx
+*.pptx
+*.xlsx
+*.csv
+*.txt
+!requirements.txt
+
+# Library auto-generated folders
+.deepeval/
+.ragas/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+
+test_config.py
