@@ -1,0 +1,62 @@
+# FastAPI Backend
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+pydantic-settings
+
+# Database
+sqlalchemy
+aiosqlite
+alembic
+
+# Celery + Redis
+celery
+redis
+
+# Document Parsers
+pymupdf
+pdfplumber
+camelot-py[cv]
+python-docx
+python-pptx
+openpyxl
+pandas
+
+# Embeddings
+sentence-transformers
+transformers
+torch
+Pillow
+open-clip-torch
+
+# Vector DB
+qdrant-client
+
+# Retrieval
+rank-bm25
+numpy
+
+# Reranker
+# (cross-encoder comes with sentence-transformers)
+
+# Knowledge Graph
+networkx
+
+# Evaluation
+ragas
+deepeval
+
+# Observability
+structlog
+
+# Streamlit Frontend
+streamlit
+
+# Utilities
+python-dotenv
+httpx
+tenacity
+tqdm
+
+python-magic-bin
