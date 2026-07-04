@@ -20,32 +20,34 @@ async def test_root_endpoint(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_query_validation_empty_string(client: AsyncClient):
+async def test_query_validation_empty_string(client: AsyncClient, auth_headers: dict):
     response = await client.post(
         "/query",
         json={
             "query": "",
             "top_k": 8,
         },
+        headers=auth_headers,
     )
     assert response.status_code == 422
 
 
 @pytest.mark.asyncio
-async def test_query_validation_top_k_zero(client: AsyncClient):
+async def test_query_validation_top_k_zero(client: AsyncClient, auth_headers: dict):
     response = await client.post(
         "/query",
         json={
             "query": "test query",
             "top_k": 0,
         },
+        headers=auth_headers,
     )
     assert response.status_code == 422
 
 
 @pytest.mark.asyncio
-async def test_status_nonexistent_document(client: AsyncClient):
-    response = await client.get("/status/nonexistent-doc-id")
+async def test_status_nonexistent_document(client: AsyncClient, auth_headers: dict):
+    response = await client.get("/status/nonexistent-doc-id", headers=auth_headers)
     assert response.status_code in (404, 200)
 
 

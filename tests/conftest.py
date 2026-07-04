@@ -66,3 +66,28 @@ async def client(setup_db):
 async def db_session(setup_db):
     async with TestSessionFactory() as session:
         yield session
+
+
+@pytest_asyncio.fixture(scope="session")
+async def auth_token(setup_db):
+    """Creates one test user for the whole test session and returns a valid JWT."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        signup_payload = {
+            "email": "testuser@example.com",
+            "password": "testpassword123",
+            "full_name": "Test User",
+        }
+        await ac.post("/auth/signup", json=signup_payload)  # ignore if already exists
+
+        login_resp = await ac.post(
+            "/auth/login",
+            json={"email": signup_payload["email"], "password": signup_payload["password"]},
+        )
+        return login_resp.json()["access_token"]
+
+
+@pytest_asyncio.fixture
+async def auth_headers(auth_token):
+    """Ready-to-use Authorization header for hitting protected routes in tests."""
+    return {"Authorization": f"Bearer {auth_token}"}
