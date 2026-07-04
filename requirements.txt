@@ -59,7 +59,8 @@ httpx
 tenacity
 tqdm
 
-python-magic-bin
+python-magic; platform_system != "Windows"
+python-magic-bin; platform_system == "Windows"
 
 groq
 google-generativeai
