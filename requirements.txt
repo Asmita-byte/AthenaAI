@@ -60,3 +60,19 @@ tenacity
 tqdm
 
 python-magic-bin
+
+groq
+google-generativeai
+
+pytest
+pytest-asyncio
+pytest-cov
+httpx
+ruff
+black
+aiosqlite
+
+bcrypt
+jwt
+pyjwt
+email-validator

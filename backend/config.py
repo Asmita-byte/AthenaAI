@@ -115,6 +115,11 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = Field(default=None)
     eval_results_dir: Path = Field(default=PROJECT_ROOT / "storage" / "eval_results")
 
+    # Auth
+    jwt_secret_key: str = Field(default="CHANGE_THIS_IN_PRODUCTION")
+    jwt_algorithm: str = Field(default="HS256")
+    access_token_expire_minutes: int = Field(default=60 * 24)  # 1 day
+
     @field_validator("environment")
     @classmethod
     def validate_environment(cls, value: str) -> str:

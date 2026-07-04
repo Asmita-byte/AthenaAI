@@ -8,24 +8,30 @@ __pycache__/
 dist/
 build/
 *.egg
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
 
 # Virtual Environment
 .venv/
 venv/
 env/
+multimodal_env/
 
-# Environment Variables (NEVER commit)
+# Environment Variables — NEVER commit
 .env
 
-# Storage (large files, user data)
+# Storage — user data, never commit
 storage/raw/
 storage/images/
 storage/graphs/
 storage/qdrant/
 storage/eval_results/
 storage/metadata.db
+test_metadata.db
 
-# Test files (temporary files used for testing parsers)
+# Test files used for parser testing
 *.pdf
 *.docx
 *.pptx
@@ -34,7 +40,7 @@ storage/metadata.db
 *.txt
 !requirements.txt
 
-# Library auto-generated folders
+# Library auto-generated
 .deepeval/
 .ragas/
 
@@ -50,9 +56,11 @@ Thumbs.db
 *.log
 logs/
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
+# Docker
+*.tar
 
+# Azure
+.azure/
 
 test_config.py
+
