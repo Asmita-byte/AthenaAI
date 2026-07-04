@@ -74,6 +74,5 @@ black
 aiosqlite
 
 bcrypt
-jwt
-pyjwt
+PyJWT
 email-validator
