@@ -1,7 +1,7 @@
 from generation.answer_generator import AnswerGenerator
 from generation.citation_builder import CitationBuilder
-from generation.response_cache import ResponseCache
 from generation.prompt_templates import SYSTEM_PROMPT, build_qa_prompt
+from generation.response_cache import ResponseCache
 
 __all__ = [
     "AnswerGenerator",

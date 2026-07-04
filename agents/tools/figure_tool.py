@@ -1,6 +1,6 @@
+from backend.config import get_settings
 from backend.core.logging import get_logger
 from embeddings.image_embedder import ImageEmbedder
-from backend.config import get_settings
 from vectorstore.qdrant_client import get_qdrant_client
 
 settings = get_settings()
@@ -10,7 +10,9 @@ logger = get_logger(__name__)
 class FigureTool:
 
     name = "figure_retriever"
-    description = "Retrieves relevant figures, diagrams, and images from documents using cross-modal search."
+    description = (
+        "Retrieves relevant figures, diagrams, and images from documents using cross-modal search."
+    )
 
     def __init__(self, image_embedder: ImageEmbedder | None = None):
         self.image_embedder = image_embedder or ImageEmbedder()
@@ -25,6 +27,7 @@ class FigureTool:
             query_filter = None
             if document_ids:
                 from qdrant_client.models import FieldCondition, Filter, MatchAny
+
                 query_filter = Filter(
                     must=[
                         FieldCondition(

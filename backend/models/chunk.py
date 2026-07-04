@@ -14,9 +14,7 @@ def generate_uuid() -> str:
 class Chunk(Base):
     __tablename__ = "chunks"
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=generate_uuid
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
     document_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
 
     chunk_type: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -42,9 +40,7 @@ class Chunk(Base):
     section_title: Mapped[str | None] = mapped_column(String(512), nullable=True)
     source_filename: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self) -> str:
         return (

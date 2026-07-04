@@ -29,13 +29,13 @@ def compute_faithfulness(answer: str, context_chunks: list[dict]) -> EvalMetric:
     if not context_chunks:
         return EvalMetric(name="faithfulness", score=0.0, description="No context provided.")
 
-    context_text = " ".join(
-        c.get("payload", {}).get("content", "") for c in context_chunks
-    ).lower()
+    context_text = " ".join(c.get("payload", {}).get("content", "") for c in context_chunks).lower()
 
     answer_words = [w for w in answer.lower().split() if len(w) > 4]
     if not answer_words:
-        return EvalMetric(name="faithfulness", score=1.0, description="No significant words to check.")
+        return EvalMetric(
+            name="faithfulness", score=1.0, description="No significant words to check."
+        )
 
     grounded = sum(1 for w in answer_words if w in context_text)
     score = grounded / len(answer_words)

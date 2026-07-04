@@ -43,6 +43,7 @@ class MetadataExtractor:
     def _extract_docx_metadata(self, file_path: Path) -> dict:
         try:
             from docx import Document
+
             doc = Document(str(file_path))
             props = doc.core_properties
             return {
@@ -61,6 +62,7 @@ class MetadataExtractor:
     def _extract_pptx_metadata(self, file_path: Path) -> dict:
         try:
             from pptx import Presentation
+
             prs = Presentation(str(file_path))
             props = prs.core_properties
             return {
@@ -77,6 +79,7 @@ class MetadataExtractor:
     def _extract_spreadsheet_metadata(self, file_path: Path) -> dict:
         try:
             import pandas as pd
+
             if file_path.suffix.lower() == ".csv":
                 df = pd.read_csv(str(file_path), nrows=0)
                 sheets = {"Sheet1": df}

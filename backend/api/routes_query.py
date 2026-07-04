@@ -2,7 +2,6 @@ import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from generation.answer_generator import AnswerGenerator
 
 from backend.api.deps import get_current_user
 from backend.core.exceptions import BaseAppException
@@ -11,6 +10,7 @@ from backend.dependencies import DatabaseDep
 from backend.models.user import User
 from backend.schemas.query import QueryRequest, QueryResponse
 from backend.services.query_service import QueryService
+from generation.answer_generator import AnswerGenerator
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/query", tags=["Query"])
@@ -50,6 +50,7 @@ async def normal_chat(
 ):
     try:
         from groq import Groq
+
         from backend.config import get_settings
         from backend.models.chat import ChatMessage
 
@@ -70,12 +71,9 @@ async def normal_chat(
             messages=[
                 {
                     "role": "system",
-                    "content": "You are Athena AI, a helpful and friendly assistant. Answer conversationally from your general knowledge."
+                    "content": "You are Athena AI, a helpful and friendly assistant. Answer conversationally from your general knowledge.",
                 },
-                {
-                    "role": "user",
-                    "content": request.query
-                }
+                {"role": "user", "content": request.query},
             ],
             temperature=0.7,
             max_tokens=1024,

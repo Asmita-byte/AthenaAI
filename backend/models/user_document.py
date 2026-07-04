@@ -18,6 +18,4 @@ class UserDocument(Base):
     user_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     document_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)

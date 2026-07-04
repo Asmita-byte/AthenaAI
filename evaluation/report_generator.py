@@ -18,7 +18,9 @@ class ReportGenerator:
             "metrics": metrics,
         }
 
-        report_path = settings.eval_results_dir / f"eval_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+        report_path = (
+            settings.eval_results_dir / f"eval_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2)

@@ -35,14 +35,12 @@ class TableChunker:
                 continue
 
             for batch_start in range(0, len(table.rows), self.max_rows_per_chunk):
-                batch_rows = table.rows[batch_start: batch_start + self.max_rows_per_chunk]
+                batch_rows = table.rows[batch_start : batch_start + self.max_rows_per_chunk]
 
                 content_lines = []
                 if table.caption:
                     content_lines.append(f"Table: {table.caption}")
-                content_lines.append(
-                    f"(Rows {batch_start + 1} to {batch_start + len(batch_rows)})"
-                )
+                content_lines.append(f"(Rows {batch_start + 1} to {batch_start + len(batch_rows)})")
                 if table.headers:
                     content_lines.append(" | ".join(table.headers))
                     content_lines.append("-" * 40)

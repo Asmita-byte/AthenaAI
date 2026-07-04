@@ -11,8 +11,8 @@ class ChartCaptioner(ImageCaptioner):
             return self._fallback_caption(image_path)
 
         try:
-            from PIL import Image
             import torch
+            from PIL import Image
 
             image = Image.open(image_path).convert("RGB")
 
@@ -48,4 +48,5 @@ class ChartCaptioner(ImageCaptioner):
 
     def _fallback_caption(self, image_path: str) -> str:
         from pathlib import Path
+
         return f"Chart or graph: {Path(image_path).stem}"

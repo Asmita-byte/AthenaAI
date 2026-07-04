@@ -1,13 +1,11 @@
 import mimetypes
 import re
-from pathlib import Path
-
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any
 
 import bcrypt
 import jwt
-
 import magic
 
 from backend.config import get_settings
@@ -23,15 +21,9 @@ logger = get_logger(__name__)
 
 ALLOWED_MIME_TYPES: dict[str, list[str]] = {
     ".pdf": ["application/pdf"],
-    ".docx": [
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ],
-    ".pptx": [
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-    ],
-    ".xlsx": [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ],
+    ".docx": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+    ".pptx": ["application/vnd.openxmlformats-officedocument.presentationml.presentation"],
+    ".xlsx": ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
     ".csv": ["text/csv", "text/plain", "application/csv"],
     ".txt": ["text/plain"],
     ".png": ["image/png"],
@@ -157,6 +149,7 @@ def validate_upload(filename: str, file_bytes: bytes) -> dict:
 
 # ---------- Password hashing ----------
 
+
 def hash_password(plain_password: str) -> str:
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(plain_password.encode("utf-8"), salt)
@@ -164,12 +157,11 @@ def hash_password(plain_password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(
-        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-    )
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 
 # ---------- JWT tokens ----------
+
 
 def create_access_token(subject: str, expires_minutes: int | None = None) -> str:
     expire = datetime.now(timezone.utc) + timedelta(
@@ -181,9 +173,7 @@ def create_access_token(subject: str, expires_minutes: int | None = None) -> str
 
 def decode_access_token(token: str) -> str | None:
     try:
-        payload = jwt.decode(
-            token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
-        )
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
         return payload.get("sub")
     except jwt.PyJWTError:
         return None

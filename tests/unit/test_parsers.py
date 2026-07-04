@@ -1,16 +1,15 @@
 import os
 import tempfile
-import pytest
 from pathlib import Path
 
-from ingestion.parsers.txt_parser import TXTParser
+import pytest
+
 from ingestion.parsers.base_parser import ParsedDocument
+from ingestion.parsers.txt_parser import TXTParser
 
 
 def create_temp_txt(content: str) -> Path:
-    tmp = tempfile.NamedTemporaryFile(
-        mode="w", suffix=".txt", delete=False, encoding="utf-8"
-    )
+    tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False, encoding="utf-8")
     tmp.write(content)
     tmp.close()
     return Path(tmp.name)

@@ -1,5 +1,5 @@
-from ingestion.parsers import PDFParser, DOCXParser, PPTXParser, XLSXParser, TXTParser
-from ingestion.chunkers import TextChunker, TableChunker, ImageChunker
+from ingestion.chunkers import ImageChunker, TableChunker, TextChunker
+from ingestion.parsers import DOCXParser, PDFParser, PPTXParser, TXTParser, XLSXParser
 
 __all__ = [
     "PDFParser",

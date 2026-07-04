@@ -1,20 +1,25 @@
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from vectorstore.qdrant_client import ensure_collections
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.api import (
+    routes_auth,
+    routes_evaluation,
+    routes_health,
+    routes_me,
+    routes_query,
+    routes_status,
+    routes_upload,
+)
 from backend.config import get_settings
 from backend.core.logging import get_logger, setup_logging
 from backend.db.database import init_db
-
-from backend.api import routes_health, routes_upload, routes_query, routes_status, routes_evaluation, routes_auth, routes_me
 from backend.models.user import User
-
 from backend.models.user_document import UserDocument  # noqa: F401
 from backend.models.user_session import UserSession  # noqa: F401
+from vectorstore.qdrant_client import ensure_collections
 
 settings = get_settings()
 setup_logging()

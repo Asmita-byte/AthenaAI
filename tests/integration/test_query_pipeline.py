@@ -21,19 +21,25 @@ async def test_root_endpoint(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_query_validation_empty_string(client: AsyncClient):
-    response = await client.post("/query", json={
-        "query": "",
-        "top_k": 8,
-    })
+    response = await client.post(
+        "/query",
+        json={
+            "query": "",
+            "top_k": 8,
+        },
+    )
     assert response.status_code == 422
 
 
 @pytest.mark.asyncio
 async def test_query_validation_top_k_zero(client: AsyncClient):
-    response = await client.post("/query", json={
-        "query": "test query",
-        "top_k": 0,
-    })
+    response = await client.post(
+        "/query",
+        json={
+            "query": "test query",
+            "top_k": 0,
+        },
+    )
     assert response.status_code == 422
 
 

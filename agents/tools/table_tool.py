@@ -20,10 +20,7 @@ class TableTool:
             document_ids=document_ids,
         )
 
-        table_results = [
-            r for r in results
-            if r.get("payload", {}).get("chunk_type") == "table"
-        ]
+        table_results = [r for r in results if r.get("payload", {}).get("chunk_type") == "table"]
 
         logger.info("TableTool complete", results_count=len(table_results))
         return table_results

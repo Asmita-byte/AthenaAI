@@ -10,7 +10,9 @@ logger = get_logger(__name__)
 class MetadataTool:
 
     name = "metadata_retriever"
-    description = "Retrieves document-level metadata such as filenames, page counts, authors, and dates."
+    description = (
+        "Retrieves document-level metadata such as filenames, page counts, authors, and dates."
+    )
 
     async def run(self, db: AsyncSession, document_ids: list[str] | None = None) -> list[dict]:
         logger.info("MetadataTool invoked", document_ids=document_ids)

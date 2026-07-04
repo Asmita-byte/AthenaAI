@@ -68,17 +68,20 @@ class DocumentService:
 
     async def list_documents(self, db: AsyncSession) -> list[Document]:
         from sqlalchemy import select
+
         result = await db.execute(select(Document).order_by(Document.created_at.desc()))
         return list(result.scalars().all())
 
     async def link_user_document(self, db: AsyncSession, user_id: str, document_id: str) -> None:
         from backend.models.user_document import UserDocument
+
         link = UserDocument(user_id=user_id, document_id=document_id)
         db.add(link)
         await db.flush()
 
     async def list_documents_for_user(self, db: AsyncSession, user_id: str) -> list[Document]:
         from sqlalchemy import select
+
         from backend.models.user_document import UserDocument
 
         result = await db.execute(
@@ -91,6 +94,7 @@ class DocumentService:
 
     async def user_owns_document(self, db: AsyncSession, user_id: str, document_id: str) -> bool:
         from sqlalchemy import select
+
         from backend.models.user_document import UserDocument
 
         result = await db.execute(

@@ -4,10 +4,17 @@ from backend.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-MONEY_PATTERN = re.compile(r"\$[\d,]+(?:\.\d+)?(?:\s?(?:billion|million|thousand|B|M|K))?", re.IGNORECASE)
+MONEY_PATTERN = re.compile(
+    r"\$[\d,]+(?:\.\d+)?(?:\s?(?:billion|million|thousand|B|M|K))?", re.IGNORECASE
+)
 PERCENT_PATTERN = re.compile(r"\d+(?:\.\d+)?\s?%")
-DATE_PATTERN = re.compile(r"\b(?:Q[1-4]\s)?\d{4}\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s\d{4}\b", re.IGNORECASE)
-ORG_PATTERN = re.compile(r"\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)*(?:\s(?:Inc|Corp|Ltd|LLC|Co|Technologies|Solutions|Group|Holdings))?\b")
+DATE_PATTERN = re.compile(
+    r"\b(?:Q[1-4]\s)?\d{4}\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s\d{4}\b",
+    re.IGNORECASE,
+)
+ORG_PATTERN = re.compile(
+    r"\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)*(?:\s(?:Inc|Corp|Ltd|LLC|Co|Technologies|Solutions|Group|Holdings))?\b"
+)
 
 
 class EntityExtractor:

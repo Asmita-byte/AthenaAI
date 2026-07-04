@@ -1,9 +1,8 @@
-from fastapi.responses import StreamingResponse
 import asyncio
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy import select
 
 from backend.api.deps import get_current_user
@@ -30,9 +29,7 @@ async def get_document_status(
     try:
         owns = await document_service.user_owns_document(db, current_user.id, document_id)
         if not owns:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
 
         document = await document_service.get_document(db, document_id)
 

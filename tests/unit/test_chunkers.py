@@ -1,6 +1,7 @@
 import pytest
-from ingestion.chunkers.text_chunker import TextChunker
+
 from ingestion.chunkers.table_chunker import TableChunker
+from ingestion.chunkers.text_chunker import TextChunker
 from ingestion.parsers.base_parser import ParsedChunk, ParsedDocument, ParsedTable
 
 

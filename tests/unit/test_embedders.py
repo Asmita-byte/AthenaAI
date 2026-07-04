@@ -1,5 +1,7 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+
 from ingestion.parsers.base_parser import ParsedChunk
 
 
@@ -7,6 +9,7 @@ class TestTextEmbedder:
 
     def test_embed_text_returns_vector(self):
         from embeddings.text_embedder import TextEmbedder
+
         embedder = TextEmbedder()
         vec = embedder.embed_text("This is a test sentence.")
 
@@ -15,8 +18,9 @@ class TestTextEmbedder:
         assert all(isinstance(v, float) for v in vec)
 
     def test_embed_empty_text_raises(self):
-        from embeddings.text_embedder import TextEmbedder
         from backend.core.exceptions import EmbeddingError
+        from embeddings.text_embedder import TextEmbedder
+
         embedder = TextEmbedder()
 
         with pytest.raises(EmbeddingError):
@@ -24,6 +28,7 @@ class TestTextEmbedder:
 
     def test_embed_batch_returns_correct_count(self):
         from embeddings.text_embedder import TextEmbedder
+
         embedder = TextEmbedder()
         texts = ["Hello", "World", "Test sentence"]
         result = embedder.embed_batch(texts)
@@ -33,6 +38,7 @@ class TestTextEmbedder:
 
     def test_embed_chunks(self):
         from embeddings.text_embedder import TextEmbedder
+
         embedder = TextEmbedder()
 
         chunks = [
@@ -62,6 +68,7 @@ class TestTableEmbedder:
 
     def test_embed_table_content(self):
         from embeddings.table_embedder import TableEmbedder
+
         embedder = TableEmbedder()
         vec = embedder.embed_table("Year | Revenue\n2023 | $394B")
 

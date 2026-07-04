@@ -60,10 +60,7 @@ class ImageChunker:
         if image.caption:
             lines.append(f"Caption: {image.caption}")
 
-        lines.append(
-            f"Image from page {image.page_number}, "
-            f"index {image.image_index}."
-        )
+        lines.append(f"Image from page {image.page_number}, " f"index {image.image_index}.")
         lines.append(f"Type: {image.image_type}")
         lines.append(f"Path: {image.image_path}")
 

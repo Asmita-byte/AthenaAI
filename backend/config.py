@@ -26,9 +26,7 @@ class Settings(BaseSettings):
     # API Server
     api_host: str = Field(default="0.0.0.0")
     api_port: int = Field(default=8000)
-    allowed_origins: List[str] = Field(
-        default=["http://localhost:8501", "http://127.0.0.1:8501"]
-    )
+    allowed_origins: List[str] = Field(default=["http://localhost:8501", "http://127.0.0.1:8501"])
 
     # Storage
     storage_raw_dir: Path = Field(default=PROJECT_ROOT / "storage" / "raw")
@@ -36,14 +34,22 @@ class Settings(BaseSettings):
     storage_graphs_dir: Path = Field(default=PROJECT_ROOT / "storage" / "graphs")
     max_upload_size_bytes: int = Field(default=50 * 1024 * 1024)
     allowed_extensions: List[str] = Field(
-        default=[".pdf", ".docx", ".pptx", ".xlsx", ".csv", ".txt",
-                 ".png", ".jpg", ".jpeg", ".webp"]
+        default=[
+            ".pdf",
+            ".docx",
+            ".pptx",
+            ".xlsx",
+            ".csv",
+            ".txt",
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".webp",
+        ]
     )
 
     # Database
-    database_url: str = Field(
-        default=f"sqlite+aiosqlite:///{PROJECT_ROOT}/storage/metadata.db"
-    )
+    database_url: str = Field(default=f"sqlite+aiosqlite:///{PROJECT_ROOT}/storage/metadata.db")
 
     # Redis
     redis_host: str = Field(default="localhost")
@@ -75,9 +81,7 @@ class Settings(BaseSettings):
     qdrant_image_collection: str = Field(default="image_chunks")
 
     # Embeddings
-    text_embedding_model: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2"
-    )
+    text_embedding_model: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
     text_embedding_dim: int = Field(default=384)
     image_embedding_model: str = Field(default="openai/clip-vit-base-patch32")
     image_embedding_dim: int = Field(default=512)

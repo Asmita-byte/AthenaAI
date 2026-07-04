@@ -104,7 +104,7 @@ class XLSXParser(BaseParser):
 
             max_rows = 100
             for batch_start in range(0, len(rows), max_rows):
-                batch_rows = rows[batch_start: batch_start + max_rows]
+                batch_rows = rows[batch_start : batch_start + max_rows]
 
                 parsed_table = ParsedTable(
                     table_index=chunk_index,

@@ -80,6 +80,7 @@ class ImageEmbedder:
 
         try:
             import torch
+
             model, processor = self._load_model()
             image = Image.open(image_path).convert("RGB")
             inputs = processor(images=image, return_tensors="pt")
@@ -99,6 +100,7 @@ class ImageEmbedder:
     def embed_text_for_image_search(self, text: str) -> list[float]:
         try:
             import torch
+
             model, processor = self._load_model()
             inputs = processor(text=[text], return_tensors="pt", padding=True)
 
@@ -111,7 +113,6 @@ class ImageEmbedder:
 
         except Exception as e:
             raise EmbeddingError(reason=f"Text-for-image embedding failed: {str(e)}")
-    
 
     def embed_image_chunks(self, chunks: list) -> list[tuple]:
         results = []

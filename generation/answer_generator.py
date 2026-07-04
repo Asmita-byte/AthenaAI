@@ -1,5 +1,5 @@
-from groq import Groq
 import google.generativeai as genai
+from groq import Groq
 
 from backend.config import get_settings
 from backend.core.exceptions import LLMError, LLMRateLimitError
@@ -52,7 +52,9 @@ class AnswerGenerator:
             }
         except (LLMError, LLMRateLimitError) as e:
             logger.error("Both LLM providers failed", error=str(e))
-            raise LLMError(provider="all", reason="Both Groq and Gemini failed to generate an answer.")
+            raise LLMError(
+                provider="all", reason="Both Groq and Gemini failed to generate an answer."
+            )
 
     def _generate_with_groq(self, prompt: str) -> str:
         try:

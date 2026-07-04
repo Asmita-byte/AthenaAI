@@ -1,5 +1,5 @@
-from workers.celery_app import celery_app
 from backend.core.logging import get_logger, setup_logging
+from workers.celery_app import celery_app
 
 setup_logging()
 logger = get_logger(__name__)

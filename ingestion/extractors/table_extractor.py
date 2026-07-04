@@ -13,6 +13,7 @@ class TableExtractor:
 
         try:
             import pdfplumber
+
             with pdfplumber.open(str(file_path)) as pdf:
                 for page_num, page in enumerate(pdf.pages, start=1):
                     raw_tables = page.extract_tables()
@@ -24,10 +25,7 @@ class TableExtractor:
                             continue
 
                         headers = [str(cell or "") for cell in raw_table[0]]
-                        rows = [
-                            [str(cell or "") for cell in row]
-                            for row in raw_table[1:]
-                        ]
+                        rows = [[str(cell or "") for cell in row] for row in raw_table[1:]]
 
                         tables.append(
                             ParsedTable(
@@ -51,6 +49,7 @@ class TableExtractor:
 
         try:
             from docx import Document
+
             doc = Document(str(file_path))
 
             for table_idx, table in enumerate(doc.tables):

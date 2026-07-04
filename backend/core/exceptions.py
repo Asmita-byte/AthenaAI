@@ -28,6 +28,7 @@ class BaseAppException(Exception):
 # FILE / UPLOAD EXCEPTIONS
 # =============================================================================
 
+
 class FileTooLargeError(BaseAppException):
     def __init__(self, filename: str, size_bytes: int, max_bytes: int):
         super().__init__(
@@ -72,6 +73,7 @@ class FileNotFoundError(BaseAppException):
 # DOCUMENT PROCESSING EXCEPTIONS
 # =============================================================================
 
+
 class DocumentParsingError(BaseAppException):
     def __init__(self, filename: str, reason: str):
         super().__init__(
@@ -106,6 +108,7 @@ class DocumentProcessingError(BaseAppException):
 # EMBEDDING EXCEPTIONS
 # =============================================================================
 
+
 class EmbeddingError(BaseAppException):
     def __init__(self, reason: str):
         super().__init__(
@@ -119,6 +122,7 @@ class EmbeddingError(BaseAppException):
 # =============================================================================
 # RETRIEVAL EXCEPTIONS
 # =============================================================================
+
 
 class RetrievalError(BaseAppException):
     def __init__(self, reason: str):
@@ -143,6 +147,7 @@ class VectorStoreError(BaseAppException):
 # =============================================================================
 # QUERY / GENERATION EXCEPTIONS
 # =============================================================================
+
 
 class QueryValidationError(BaseAppException):
     def __init__(self, reason: str):
@@ -178,6 +183,7 @@ class LLMRateLimitError(BaseAppException):
 # JOB / WORKER EXCEPTIONS
 # =============================================================================
 
+
 class JobNotFoundError(BaseAppException):
     def __init__(self, job_id: str):
         super().__init__(
@@ -201,6 +207,7 @@ class JobFailedError(BaseAppException):
 # =============================================================================
 # CONFIGURATION EXCEPTIONS
 # =============================================================================
+
 
 class ConfigurationError(BaseAppException):
     def __init__(self, reason: str):

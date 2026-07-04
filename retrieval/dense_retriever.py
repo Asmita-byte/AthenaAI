@@ -30,6 +30,7 @@ class DenseRetriever:
             query_filter = None
             if document_ids:
                 from qdrant_client.models import FieldCondition, Filter, MatchAny
+
                 query_filter = Filter(
                     must=[
                         FieldCondition(

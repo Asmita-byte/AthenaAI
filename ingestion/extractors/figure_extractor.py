@@ -9,8 +9,14 @@ logger = get_logger(__name__)
 class FigureExtractor:
 
     FIGURE_KEYWORDS = [
-        "figure", "fig", "chart", "graph", "diagram",
-        "plot", "visualization", "illustration",
+        "figure",
+        "fig",
+        "chart",
+        "graph",
+        "diagram",
+        "plot",
+        "visualization",
+        "illustration",
     ]
 
     def classify_image(self, image_path: str, context_text: str = "") -> str:

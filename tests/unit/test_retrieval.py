@@ -1,4 +1,5 @@
 import pytest
+
 from retrieval.fusion import RRFFusion
 from retrieval.sparse_retriever import SparseRetriever
 

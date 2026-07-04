@@ -173,7 +173,7 @@ class DOCXParser(BaseParser):
 
                 chunks.append(
                     ParsedChunk(
-                        content=f"Image extracted from document.",
+                        content="Image extracted from document.",
                         chunk_type="image",
                         page_number=1,
                         chunk_index=img_idx,

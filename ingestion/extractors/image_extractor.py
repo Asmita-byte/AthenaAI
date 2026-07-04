@@ -16,6 +16,7 @@ class ImageExtractor:
 
         try:
             import fitz
+
             with fitz.open(str(file_path)) as pdf:
                 for page_num, page in enumerate(pdf, start=1):
                     for img_idx, img_info in enumerate(page.get_images(full=True)):

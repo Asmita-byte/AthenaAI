@@ -19,9 +19,7 @@ def generate_uuid() -> str:
 class Document(Base):
     __tablename__ = "documents"
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=generate_uuid
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
     filename: Mapped[str] = mapped_column(String(255), nullable=False)
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     file_extension: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -29,9 +27,7 @@ class Document(Base):
     mime_type: Mapped[str] = mapped_column(String(100), nullable=False)
     storage_path: Mapped[str] = mapped_column(String(512), nullable=False)
 
-    status: Mapped[str] = mapped_column(
-        String(50), nullable=False, default="pending"
-    )
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     total_pages: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -47,25 +43,21 @@ class Document(Base):
     author: Mapped[str | None] = mapped_column(String(255), nullable=True)
     doc_language: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
-    )            
+    )
 
     chunks: Mapped[list["Chunk"]] = relationship(
-        "Chunk", cascade="all, delete-orphan",
-        primaryjoin="Document.id == foreign(Chunk.document_id)"
+        "Chunk",
+        cascade="all, delete-orphan",
+        primaryjoin="Document.id == foreign(Chunk.document_id)",
     )
     jobs: Mapped[list["Job"]] = relationship(
-        "Job", cascade="all, delete-orphan",
-        primaryjoin="Document.id == foreign(Job.document_id)"
+        "Job", cascade="all, delete-orphan", primaryjoin="Document.id == foreign(Job.document_id)"
     )
 
     def __repr__(self) -> str:
         return (
-            f"Document(id={self.id!r}, "
-            f"filename={self.filename!r}, "
-            f"status={self.status!r})"
+            f"Document(id={self.id!r}, " f"filename={self.filename!r}, " f"status={self.status!r})"
         )

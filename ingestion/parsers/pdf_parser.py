@@ -1,7 +1,7 @@
 from pathlib import Path
 
-import pdfplumber
 import fitz
+import pdfplumber
 
 from backend.config import get_settings
 from backend.core.logging import get_logger
@@ -100,10 +100,7 @@ class PDFParser(BaseParser):
                         continue
 
                     headers = [str(cell or "") for cell in raw_table[0]]
-                    rows = [
-                        [str(cell or "") for cell in row]
-                        for row in raw_table[1:]
-                    ]
+                    rows = [[str(cell or "") for cell in row] for row in raw_table[1:]]
 
                     parsed_table = ParsedTable(
                         table_index=table_idx,
@@ -144,9 +141,7 @@ class PDFParser(BaseParser):
                         image_bytes = base_image["image"]
                         image_ext = base_image["ext"]
 
-                        image_filename = (
-                            f"{file_path.stem}_page{page_num}_img{img_idx}.{image_ext}"
-                        )
+                        image_filename = f"{file_path.stem}_page{page_num}_img{img_idx}.{image_ext}"
                         image_path = images_dir / image_filename
 
                         with open(image_path, "wb") as f:

@@ -1,6 +1,6 @@
-from vectorstore.qdrant_client import get_qdrant_client, ensure_collections, get_collection_info
+from vectorstore.collections import ImageChunkPayload, TextChunkPayload
 from vectorstore.indexer import VectorIndexer
-from vectorstore.collections import TextChunkPayload, ImageChunkPayload
+from vectorstore.qdrant_client import ensure_collections, get_collection_info, get_qdrant_client
 
 __all__ = [
     "get_qdrant_client",

@@ -3,9 +3,9 @@ import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from agents.query_planner import QueryPlanner
 from backend.core.logging import get_logger
 from backend.models.chat import ChatMessage
-from agents.query_planner import QueryPlanner
 from generation.answer_generator import AnswerGenerator
 from generation.citation_builder import CitationBuilder
 from generation.response_cache import ResponseCache
@@ -97,6 +97,7 @@ class QueryService:
         self, db: AsyncSession, user_id: str, session_id: str, title: str | None = None
     ) -> None:
         from sqlalchemy import select
+
         from backend.models.user_session import UserSession
 
         result = await db.execute(
@@ -116,6 +117,7 @@ class QueryService:
 
     async def list_sessions_for_user(self, db: AsyncSession, user_id: str) -> list:
         from sqlalchemy import select
+
         from backend.models.user_session import UserSession
 
         result = await db.execute(
@@ -127,6 +129,7 @@ class QueryService:
 
     async def user_owns_session(self, db: AsyncSession, user_id: str, session_id: str) -> bool:
         from sqlalchemy import select
+
         from backend.models.user_session import UserSession
 
         result = await db.execute(

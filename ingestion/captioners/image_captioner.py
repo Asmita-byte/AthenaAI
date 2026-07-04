@@ -20,8 +20,8 @@ class ImageCaptioner:
                 return None, None
 
             try:
-                from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
                 import torch
+                from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
 
                 logger.info("Loading VLM model", model=settings.vlm_model)
 
@@ -48,8 +48,8 @@ class ImageCaptioner:
             return self._fallback_caption(image_path)
 
         try:
-            from PIL import Image
             import torch
+            from PIL import Image
 
             image = Image.open(image_path).convert("RGB")
 
@@ -79,9 +79,7 @@ class ImageCaptioner:
             with torch.no_grad():
                 output_ids = model.generate(**inputs, max_new_tokens=256)
 
-            caption = processor.batch_decode(
-                output_ids, skip_special_tokens=True
-            )[0].strip()
+            caption = processor.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
             logger.info("Image captioned", image_path=image_path, caption_length=len(caption))
             return caption

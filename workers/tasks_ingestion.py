@@ -1,25 +1,26 @@
 import asyncio
+from datetime import datetime
 from pathlib import Path
 
-from workers.celery_app import celery_app
+from sqlalchemy import select
+
 from backend.core.logging import get_logger, setup_logging
 from backend.db.database import AsyncSessionFactory
 from backend.models.document import Document
 from backend.models.job import Job
-from ingestion.parsers.pdf_parser import PDFParser
-from ingestion.parsers.docx_parser import DOCXParser
-from ingestion.parsers.pptx_parser import PPTXParser
-from ingestion.parsers.xlsx_parser import XLSXParser
-from ingestion.parsers.txt_parser import TXTParser
-from ingestion.chunkers.text_chunker import TextChunker
-from ingestion.chunkers.table_chunker import TableChunker
-from ingestion.chunkers.image_chunker import ImageChunker
-from embeddings.text_embedder import TextEmbedder
-from embeddings.table_embedder import TableEmbedder
 from embeddings.image_embedder import ImageEmbedder
+from embeddings.table_embedder import TableEmbedder
+from embeddings.text_embedder import TextEmbedder
+from ingestion.chunkers.image_chunker import ImageChunker
+from ingestion.chunkers.table_chunker import TableChunker
+from ingestion.chunkers.text_chunker import TextChunker
+from ingestion.parsers.docx_parser import DOCXParser
+from ingestion.parsers.pdf_parser import PDFParser
+from ingestion.parsers.pptx_parser import PPTXParser
+from ingestion.parsers.txt_parser import TXTParser
+from ingestion.parsers.xlsx_parser import XLSXParser
 from vectorstore.indexer import VectorIndexer
-from datetime import datetime
-from sqlalchemy import select
+from workers.celery_app import celery_app
 
 setup_logging()
 logger = get_logger(__name__)
@@ -34,7 +35,9 @@ PARSER_MAP = {
 }
 
 
-async def _update_job_and_document(document_id: str, stage: str, progress: float, status: str = "running"):
+async def _update_job_and_document(
+    document_id: str, stage: str, progress: float, status: str = "running"
+):
     async with AsyncSessionFactory() as session:
         result = await session.execute(
             select(Job).where(Job.document_id == document_id).order_by(Job.created_at.desc())

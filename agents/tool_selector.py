@@ -1,8 +1,14 @@
 class ToolSelector:
 
     METADATA_KEYWORDS = [
-        "author", "title", "when was", "who wrote", "published", "date",
-        "page count", "how many pages",
+        "author",
+        "title",
+        "when was",
+        "who wrote",
+        "published",
+        "date",
+        "page count",
+        "how many pages",
     ]
 
     def select_tools(self, query: str) -> list[str]:

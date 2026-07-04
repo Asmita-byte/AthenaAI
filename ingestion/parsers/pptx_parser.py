@@ -78,10 +78,7 @@ class PPTXParser(BaseParser):
 
                 is_title = False
                 try:
-                    if (
-                        shape.placeholder_format is not None
-                        and shape.placeholder_format.idx == 0
-                    ):
+                    if shape.placeholder_format is not None and shape.placeholder_format.idx == 0:
                         is_title = True
                 except ValueError:
                     is_title = False

@@ -14,15 +14,11 @@ def generate_uuid() -> str:
 class Job(Base):
     __tablename__ = "jobs"
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=generate_uuid
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
     document_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
 
     job_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    status: Mapped[str] = mapped_column(
-        String(50), nullable=False, default="pending"
-    )
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="pending")
 
     current_stage: Mapped[str | None] = mapped_column(String(100), nullable=True)
     progress_percent: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
@@ -36,9 +32,7 @@ class Job(Base):
 
     started_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
     )

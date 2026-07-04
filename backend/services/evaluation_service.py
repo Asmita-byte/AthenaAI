@@ -1,5 +1,9 @@
 from backend.core.logging import get_logger
-from evaluation.metrics import compute_answer_relevancy, compute_faithfulness, compute_context_utilization
+from evaluation.metrics import (
+    compute_answer_relevancy,
+    compute_context_utilization,
+    compute_faithfulness,
+)
 from evaluation.report_generator import ReportGenerator
 
 logger = get_logger(__name__)
@@ -32,12 +36,14 @@ class EvaluationService:
             faithfulness = compute_faithfulness(answer, context_chunks)
             utilization = compute_context_utilization(context_chunks, top_k=8)
 
-            all_metrics.append({
-                "query": query[:100],
-                "answer_relevancy": relevancy.score,
-                "faithfulness": faithfulness.score,
-                "context_utilization": utilization.score,
-            })
+            all_metrics.append(
+                {
+                    "query": query[:100],
+                    "answer_relevancy": relevancy.score,
+                    "faithfulness": faithfulness.score,
+                    "context_utilization": utilization.score,
+                }
+            )
 
         avg_relevancy = sum(m["answer_relevancy"] for m in all_metrics) / len(all_metrics)
         avg_faithfulness = sum(m["faithfulness"] for m in all_metrics) / len(all_metrics)
