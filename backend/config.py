@@ -62,7 +62,10 @@ class Settings(BaseSettings):
     def redis_url(self) -> str:
         scheme = "rediss" if self.redis_ssl else "redis"
         auth = f":{self.redis_password}@" if self.redis_password else ""
-        return f"{scheme}://{auth}{self.redis_host}:{self.redis_port}/{self.redis_db}"
+        url = f"{scheme}://{auth}{self.redis_host}:{self.redis_port}/{self.redis_db}"
+        if self.redis_ssl:
+            url += "?ssl_cert_reqs=CERT_REQUIRED"
+        return url
 
     # Celery
     celery_broker_url: Optional[str] = Field(default=None)
