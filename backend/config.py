@@ -80,6 +80,8 @@ class Settings(BaseSettings):
     qdrant_host: str = Field(default="localhost")
     qdrant_port: int = Field(default=6333)
     qdrant_use_memory: bool = Field(default=False)
+    qdrant_api_key: Optional[str] = Field(default=None)
+    qdrant_https: bool = Field(default=False)
     qdrant_persist_dir: Path = Field(default=PROJECT_ROOT / "storage" / "qdrant")
     qdrant_text_collection: str = Field(default="text_chunks")
     qdrant_image_collection: str = Field(default="image_chunks")
