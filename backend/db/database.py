@@ -10,10 +10,14 @@ settings = get_settings()
 logger = get_logger(__name__)
 
 
+_connect_args = (
+    {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
+)
+
 engine = create_async_engine(
     url=settings.database_url,
     echo=settings.debug,
-    connect_args={"check_same_thread": False},
+    connect_args=_connect_args,
 )
 
 AsyncSessionFactory = async_sessionmaker(
