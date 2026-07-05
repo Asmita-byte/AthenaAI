@@ -76,3 +76,5 @@ aiosqlite
 bcrypt
 PyJWT
 email-validator
+
+asyncpg

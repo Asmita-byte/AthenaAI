@@ -55,10 +55,14 @@ class Settings(BaseSettings):
     redis_host: str = Field(default="localhost")
     redis_port: int = Field(default=6379)
     redis_db: int = Field(default=0)
+    redis_password: Optional[str] = Field(default=None)
+    redis_ssl: bool = Field(default=False)
 
     @property
     def redis_url(self) -> str:
-        return f"redis://{self.redis_host}:{self.redis_port}/{self.redis_db}"
+        scheme = "rediss" if self.redis_ssl else "redis"
+        auth = f":{self.redis_password}@" if self.redis_password else ""
+        return f"{scheme}://{auth}{self.redis_host}:{self.redis_port}/{self.redis_db}"
 
     # Celery
     celery_broker_url: Optional[str] = Field(default=None)
