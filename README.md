@@ -33,11 +33,11 @@
 ](LICENSE)
 [
 
-![Tests](https://img.shields.io/badge/Tests-36_passed-22c55e?style=flat-square)
+![CI](https://github.com/Asmita-byte/AthenaAI/actions/workflows/ci.yml/badge.svg)
 
-](tests/)
+](https://github.com/Asmita-byte/AthenaAI/actions)
 
-[Live Demo](#) · [API Docs](http://localhost:8000/docs) · [Architecture](#architecture)
+[Live Demo](https://asmita-byte.github.io/AthenaAI/) · [API Docs](http://localhost:8000/docs) · [Architecture](#architecture)
 
 </div>
 
@@ -63,7 +63,7 @@ A production-grade **Multimodal Agentic RAG** platform that:
 - Uses an **agentic query planner** that dynamically selects retrieval tools based on query intent
 - Returns **grounded answers with exact citations** — page number, table index, figure reference, source file
 - Supports **multi-document reasoning** — compare, contrast, verify across documents simultaneously
-- Enforces **per-user data isolation** with JWT authentication
+- Enforces **per-user data isolation** with JWT authentication — every document, chat session, and retrieval is scoped strictly to the owning account
 
 ---
 
@@ -71,28 +71,31 @@ A production-grade **Multimodal Agentic RAG** platform that:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│              Athena AI Frontend (HTML/JS)            │
+│         Athena AI Frontend (HTML/JS, GitHub Pages)   │
 │     Login · Upload · Chat · Citations · History      │
 └─────────────────────┬───────────────────────────────┘
                       │ HTTPS + JWT
                       ▼
 ┌─────────────────────────────────────────────────────┐
-│              FastAPI Backend (Python 3.11)           │
-│   /auth  /upload  /query  /status  /health           │
+│      FastAPI Backend (Python 3.11, Azure Container   │
+│                        Apps)                          │
+│   /auth  /upload  /query  /status  /me  /health      │
 └──────┬──────────────────────────┬───────────────────┘
        │                          │
        ▼                          ▼
 ┌─────────────┐        ┌──────────────────────────────┐
-│ Celery +    │        │        Query Pipeline         │
-│ Redis Queue │        │                              │
-│             │        │  Query → Planner Agent       │
-│ • Parse     │        │    → Tool Selection          │
-│ • Chunk     │        │    → Hybrid Retrieval        │
-│ • Embed     │        │    → RRF Fusion              │
-│ • Caption   │        │    → Cross-Encoder Rerank    │
-│ • KG Build  │        │    → LLM Generation (Groq)  │
-└──────┬──────┘        │    → Citation Attachment      │
-       │               └──────────────────────────────┘
+│ Celery      │        │        Query Pipeline         │
+│ Worker      │        │                              │
+│ (Container  │        │  Query → Planner Agent       │
+│  App)       │        │    → Tool Selection          │
+│             │        │    → Hybrid Retrieval        │
+│ • Parse     │        │    → RRF Fusion               │
+│ • Chunk     │        │    → Cross-Encoder Rerank    │
+│ • Embed     │        │    → LLM Generation (Groq)  │
+│ • Caption   │        │    → Citation Attachment      │
+│ • KG Build  │        └──────────────────────────────┘
+└──────┬──────┘
+       │
        ▼
 ┌─────────────────────────────────────────────────────┐
 │                  Ingestion Pipeline                  │
@@ -106,11 +109,13 @@ A production-grade **Multimodal Agentic RAG** platform that:
 │                    ↓                                │
 │    Text Embedder · Table Embedder · CLIP           │
 │                    ↓                                │
-│              Qdrant Vector DB                       │
+│              Qdrant Vector DB (Qdrant Cloud)         │
 └─────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────┐
 │                   Storage Layer                      │
-│   SQLite · Local FS · Qdrant · Redis Cache          │
+│  PostgreSQL (Azure) · Azure Files · Qdrant Cloud ·   │
+│  Azure Cache for Redis                               │
+│  (SQLite + local disk in local dev mode)             │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -145,15 +150,16 @@ Dense retrieval has high recall. BM25 has high keyword precision. The cross-enco
 | Backend API | FastAPI + Uvicorn | Async, production-grade, auto-docs |
 | Authentication | JWT + bcrypt | Stateless, secure, industry standard |
 | Task Queue | Celery + Redis | Fault-tolerant, horizontally scalable |
-| Vector DB | Qdrant | OSS, payload filtering, CPU-capable |
+| Vector DB | Qdrant (Qdrant Cloud in production) | OSS, payload filtering, CPU-capable |
 | Text Embeddings | all-MiniLM-L6-v2 | Fast, free, 384-dim, strong quality |
 | Image Embeddings | CLIP ViT-B/32 | Cross-modal retrieval, OSS |
 | Reranker | ms-marco-MiniLM-L-6-v2 | Free, accurate cross-encoder |
 | LLM | Groq llama-3.3-70b | Free tier, extremely fast inference |
 | LLM Fallback | Gemini 1.5 Flash | Free tier, generous limits |
 | Vision LLM | Qwen2-VL-7B | OSS, runs locally |
-| Metadata DB | SQLite + SQLAlchemy async | Zero config, production swap-ready |
+| Metadata DB | SQLAlchemy async — SQLite (local dev) / PostgreSQL (production) | Zero config locally, swaps to a managed Postgres instance in prod via a single env var |
 | Frontend | Vanilla HTML/CSS/JS | Zero dependencies, instant load |
+| Deployment | Azure Container Apps (API + worker), Azure Cache for Redis, Azure Database for PostgreSQL, Azure Files, GitHub Pages (frontend) | Managed infra, no server maintenance |
 
 ---
 
@@ -175,43 +181,43 @@ Dense retrieval has high recall. BM25 has high keyword precision. The cross-enco
 athena-ai/
 │
 ├── backend/                  # FastAPI application
-│   ├── api/                  # Route handlers (auth, upload, query, status)
+│   ├── api/                  # Route handlers (auth, upload, query, status, me)
 │   ├── models/               # SQLAlchemy ORM models
-│   ├── schemas/              # Pydantic request/response schemas
-│   ├── services/             # Business logic layer
-│   └── core/                 # Config, logging, security, exceptions
+│   ├── schemas/               # Pydantic request/response schemas
+│   ├── services/              # Business logic layer
+│   └── core/                  # Config, logging, security, exceptions
 │
 ├── ingestion/                # Document processing pipeline
-│   ├── parsers/              # PDF, DOCX, PPTX, XLSX, TXT parsers
-│   ├── chunkers/             # Text, table, image chunkers
-│   ├── extractors/           # Table, image, metadata extraction
-│   └── captioners/           # VLM-based image/chart captioning
+│   ├── parsers/               # PDF, DOCX, PPTX, XLSX, TXT parsers
+│   ├── chunkers/              # Text, table, image chunkers
+│   ├── extractors/            # Table, image, metadata extraction
+│   └── captioners/            # VLM-based image/chart captioning
 │
-├── embeddings/               # Text + image embedding pipelines
-├── retrieval/                # Dense, sparse, RRF fusion, reranking
-├── agents/                   # Agentic query planner + retrieval tools
-├── generation/               # LLM answer generation + citations
-├── knowledge_graph/          # Cross-document entity graph (NetworkX)
-├── vectorstore/              # Qdrant client + bulk indexing
-├── workers/                  # Celery background task definitions
-├── evaluation/               # Ragas + DeepEval evaluation pipelines
-├── observability/            # Latency tracking + metrics collection
-├── tests/                    # 36 tests — unit, integration, e2e
-├── index.html                # Frontend — zero-dependency chat UI
-├── docker-compose.yml        # Full stack local deployment
-├── Dockerfile.api            # FastAPI container
-├── Dockerfile.worker         # Celery worker container
-└── .github/workflows/        # CI/CD — lint, test, build validation
+├── embeddings/                # Text + image embedding pipelines
+├── retrieval/                 # Dense, sparse, RRF fusion, reranking
+├── agents/                    # Agentic query planner + retrieval tools
+├── generation/                 # LLM answer generation + citations
+├── knowledge_graph/            # Cross-document entity graph (NetworkX)
+├── vectorstore/                # Qdrant client + bulk indexing
+├── workers/                    # Celery background task definitions
+├── evaluation/                  # Ragas + DeepEval evaluation pipelines
+├── observability/               # Latency tracking + metrics collection
+├── tests/                       # Unit, integration, and e2e tests
+├── docs/index.html              # Frontend — zero-dependency chat UI (served via GitHub Pages)
+├── docker-compose.yml            # Full stack local deployment
+├── Dockerfile.api                # FastAPI container
+├── Dockerfile.worker             # Celery worker container
+└── .github/workflows/             # CI/CD — lint, test, build validation
 ```
 
 ---
 
-## Quick Start
+## Quick Start (Local Development)
 
 ```bash
 # 1. Clone
 git clone https://github.com/Asmita-byte/AthenaAI.git
-cd athena-ai
+cd AthenaAI
 
 # 2. Environment
 conda create -n multimodal_env python=3.11 -y
@@ -231,21 +237,32 @@ celery -A workers.celery_app worker --loglevel=info --pool=solo
 uvicorn backend.main:app --reload
 
 # 6. Open frontend
-# Open index.html in browser → signup → upload → ask
+# Open docs/index.html in browser → signup → upload → ask
 ```
+
+## Production Deployment
+
+The live version runs on Azure:
+
+- **API + Worker** — two independent Azure Container Apps, built from `Dockerfile.api` and `Dockerfile.worker`, pushed to Azure Container Registry
+- **Database** — Azure Database for PostgreSQL (Flexible Server)
+- **Cache / Task Queue** — Azure Cache for Redis (SSL-secured)
+- **Vector Store** — Qdrant Cloud
+- **Shared file storage** — Azure Files, mounted into both containers so uploaded documents are visible to the ingestion worker
+- **Frontend** — static HTML/JS served via GitHub Pages, talking to the API over HTTPS
 
 ---
 
 ## Key Engineering Decisions
 
 **Why Qdrant over Pinecone/Weaviate?**
-Runs entirely locally — no API costs, no data leaving your machine. Persistent storage with a single config change for production. Supports payload filtering for per-user document isolation.
+Runs entirely locally in dev, or on Qdrant Cloud in production — no vendor lock-in, no data leaving infrastructure you control. Supports payload filtering, which is what makes per-user document isolation possible.
 
 **Why separate text and image collections?**
 Text embeddings (384-dim) and CLIP embeddings (512-dim) live in different vector spaces. Mixing them would require dimension alignment and hurt retrieval quality for both modalities.
 
-**Why SQLite over PostgreSQL?**
-Zero configuration for local development. The SQLAlchemy async layer means swapping to PostgreSQL in production requires changing exactly one environment variable.
+**Why SQLite locally but PostgreSQL in production?**
+Zero configuration for local development. The SQLAlchemy async layer means the production deployment runs on a real managed Postgres instance by changing exactly one environment variable (`DATABASE_URL`) — no code changes.
 
 **Why Celery over FastAPI BackgroundTasks?**
 FastAPI BackgroundTasks die if the server restarts. Celery tasks survive restarts, support retries, and scale horizontally — critical for a document processing pipeline that can take minutes per file.
@@ -253,18 +270,18 @@ FastAPI BackgroundTasks die if the server restarts. Celery tasks survive restart
 **Why JWT over session-based auth?**
 Stateless — no session store needed. Works across multiple API instances. Standard for REST APIs and mobile clients.
 
+**Per-user isolation, defense in depth**
+Every document upload, chat session, and retrieval call is scoped to the authenticated user at multiple layers — ownership checks at the API layer, user-linking tables for documents and sessions, and every chat message tagged directly with its owning user ID — so one account can never see another's data even under edge-case bugs like session ID reuse.
+
 ---
 
 ## Test Coverage
 
 ```bash
 pytest tests/ -v
-
-# Results: 36 passed in < 40s
-# Unit:        24 tests — parsers, chunkers, embedders, retrieval
-# Integration:  8 tests — ingestion pipeline, API endpoints
-# E2E:          4 tests — full upload → process → query flow
 ```
+
+Covers unit tests (parsers, chunkers, embedders, retrieval), integration tests (ingestion pipeline, API endpoints), and end-to-end tests (full upload → process → query flow). See the CI badge above for the current pass/fail status on `main`.
 
 ---
 
@@ -278,7 +295,9 @@ pytest tests/ -v
 
 **System Design** — Scalable ingestion pipeline, caching strategy, per-user isolation, multi-tenant readiness
 
-**Production Thinking** — Observability, fault tolerance, security, Docker deployment, CI/CD
+**Cloud & DevOps** — Docker, Azure Container Apps, managed Postgres/Redis, CI/CD via GitHub Actions, cloud debugging and incident resolution
+
+**Production Thinking** — Observability, fault tolerance, security hardening, defense-in-depth data isolation
 
 ---
 
@@ -294,10 +313,11 @@ pytest tests/ -v
 • Designed async document ingestion pipeline with Celery + Redis supporting
   parallel processing of text, tables, and images with VLM captioning
 
-• Achieved 36/36 test coverage across unit, integration, and E2E test suites
-  with CI/CD pipeline via GitHub Actions
+• Added JWT authentication with defense-in-depth per-user data isolation,
+  closing a cross-tenant data leak in both document retrieval and chat history
 
-• Deployed on Azure with JWT authentication and per-user data isolation
+• Deployed a multi-service architecture (API, worker, Postgres, Redis, vector
+  DB) to Azure Container Apps with CI/CD via GitHub Actions
 ```
 
 ---
