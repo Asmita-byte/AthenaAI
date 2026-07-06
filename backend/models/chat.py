@@ -14,8 +14,11 @@ def generate_uuid() -> str:
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=generate_uuid
+    )
     session_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    user_id: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
 
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
@@ -40,12 +43,15 @@ class ChatMessage(Base):
     faithfulness_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     relevancy_score: Mapped[float | None] = mapped_column(Float, nullable=True)
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.utcnow
+    )
 
     def __repr__(self) -> str:
         return (
             f"ChatMessage(id={self.id!r}, "
             f"session_id={self.session_id!r}, "
+            f"user_id={self.user_id!r}, "
             f"role={self.role!r}, "
             f"total_latency_ms={self.total_latency_ms})"
         )
