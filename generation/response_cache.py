@@ -14,20 +14,32 @@ class ResponseCache:
 
     def __init__(self):
         self._redis: redis.Redis | None = None
+        self._redis_checked = False
 
     def _get_redis(self) -> redis.Redis | None:
-        if self._redis is None:
-            try:
-                self._redis = redis.Redis(
-                    host=settings.redis_host,
-                    port=settings.redis_port,
-                    db=settings.redis_db,
-                    decode_responses=True,
-                )
-                self._redis.ping()
-            except Exception:
-                logger.warning("Redis unavailable — response cache disabled")
-                self._redis = None
+        if self._redis is not None:
+            return self._redis
+        if self._redis_checked:
+            # Already tried once and failed this run — don't retry and wait again.
+            return None
+
+        self._redis_checked = True
+        try:
+            self._redis = redis.Redis(
+                host=settings.redis_host,
+                port=settings.redis_port,
+                db=settings.redis_db,
+                password=settings.redis_password,
+                ssl=settings.redis_ssl,
+                ssl_cert_reqs=None,
+                decode_responses=True,
+                socket_connect_timeout=3,
+                socket_timeout=3,
+            )
+            self._redis.ping()
+        except Exception:
+            logger.warning("Redis unavailable — response cache disabled")
+            self._redis = None
         return self._redis
 
     def _make_key(self, query: str, document_ids: list[str] | None) -> str:
